@@ -54,7 +54,7 @@
         .card {
             background: #1e293b;
             border-radius: 16px;
-            padding: 10px;
+            padding: 14px;
             margin-bottom: 14px;
             border: 1px solid #334155;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
@@ -72,7 +72,7 @@
 
         .input-group {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr; /* សម្រួលឱ្យរត់ពេញពីឆ្វេងទៅស្តាំ */
             gap: 10px;
         }
 
@@ -97,7 +97,7 @@
             border-radius: 10px;
             font-size: 13px;
             outline: none;
-            width: 60%;
+            width: 100%;
         }
 
         .field input:focus {
@@ -255,6 +255,12 @@
             font-weight: 700;
             font-size: 13px;
             cursor: pointer;
+        }
+
+        .type-split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
         }
 
         .bottom-bar {
@@ -430,7 +436,7 @@
                 </div>
                 <div class="field">
                     <label>លេខទូរស័ព្ទអ្នកបើក</label>
-                    <input type="tel" id="driverPhone" placeholder="012 345 678">
+                    <input type="tel" id="driverPhone" inputmode="numeric" placeholder="012 345 678">
                 </div>
             </div>
             <div class="field" style="margin-top: 8px;">
@@ -549,6 +555,22 @@
             </div>
         </div>
 
+        <!-- Optional Category Split Section (ជ្រូកពូជ / ជ្រូកសាច់) -->
+        <div class="card">
+            <div class="card-title">🐖 ចែកភេទជ្រូក (បំពេញក៏បាន មិនបំពេញក៏បាន)</div>
+            <div class="type-split-grid">
+                <div class="field">
+                    <label>🐷 ចំនួនជ្រូកពង</label>
+                    <input type="number" id="breedPigCount" inputmode="numeric" placeholder="ឧ. 50" oninput="validatePigSplit()">
+                </div>
+                <div class="field">
+                    <label>🍖 ចំនួនជ្រូកសាច់</label>
+                    <input type="number" id="meatPigCount" inputmode="numeric" placeholder="ឧ. 70" oninput="validatePigSplit()">
+                </div>
+            </div>
+            <p id="splitNotice" style="font-size: 11px; margin-top: 6px; color: #94a3b8;"></p>
+        </div>
+
         <!-- History Log Section -->
         <div class="card">
             <div class="card-title" style="justify-content: space-between;">
@@ -646,6 +668,7 @@
 
             let normal = data.total - specialSum;
             document.getElementById('normalPig').innerText = normal < 0 ? 0 : normal;
+            validatePigSplit();
         }
 
         function changeTotal(val) {
@@ -666,19 +689,54 @@
             updateUI();
         }
 
+        function validatePigSplit() {
+            let breedVal = document.getElementById('breedPigCount').value;
+            let meatVal = document.getElementById('meatPigCount').value;
+            let notice = document.getElementById('splitNotice');
+
+            if (breedVal === '' && meatVal === '') {
+                notice.innerText = '';
+                return true;
+            }
+
+            let breed = parseInt(breedVal) || 0;
+            let meat = parseInt(meatVal) || 0;
+            let sum = breed + meat;
+
+            if (data.total > 0 && sum !== data.total) {
+                notice.style.color = '#ef4444';
+                notice.innerText = `⚠️ ជ្រូកពង (${breed}) + ជ្រូកសាច់ (${meat}) = ${sum} ក្បាល (មិនស្មើចំនួនសរុប ${data.total} ក្បាលឡើយ)`;
+                return false;
+            } else {
+                notice.style.color = '#22c55e';
+                notice.innerText = `✅ ត្រូវគ្នានឹងចំនួនសរុប (${sum} ក្បាល)`;
+                return true;
+            }
+        }
+
         function resetAll() {
             if (confirm("តើអ្នកពិតជាចង់កំណត់ទិន្នន័យឡើងវិញមែនទេ?")) {
                 data.total = 0;
                 for (let key in data.conditions) {
                     data.conditions[key] = 0;
                 }
+                document.getElementById('breedPigCount').value = '';
+                document.getElementById('meatPigCount').value = '';
                 updateUI();
             }
         }
 
         function saveRecord() {
             if (data.total === 0) {
-                alert("សូមរាប់ចំនួនជ្រូកជាមុនសិន înainte save!");
+                alert("សូមរាប់ចំនួនជ្រូកជាមុនសិន!");
+                return;
+            }
+
+            let breedVal = document.getElementById('breedPigCount').value;
+            let meatVal = document.getElementById('meatPigCount').value;
+
+            if ((breedVal !== '' || meatVal !== '') && !validatePigSplit()) {
+                alert("ចំនួនជ្រូកពូជ និងជ្រូកសាច់ បូកបញ្ចូលគ្នាមិនស្មើនឹងចំនួនជ្រូកសរុបឡើយ! សូមពិនិត្យមើលឡើងវិញ។");
                 return;
             }
 
@@ -689,6 +747,8 @@
                 phone: document.getElementById('driverPhone').value || 'មិនមាន',
                 inspector: document.getElementById('inspectorName').value || 'មិនមាន',
                 total: data.total,
+                breedCount: breedVal !== '' ? parseInt(breedVal) : null,
+                meatCount: meatVal !== '' ? parseInt(meatVal) : null,
                 conditions: {...data.conditions}
             };
 
@@ -718,6 +778,11 @@
                 }
                 let specString = specTxt.length > 0 ? specTxt.join(', ') : 'គ្មានលក្ខខណ្ឌពិសេស';
 
+                let typeString = '';
+                if (item.breedCount !== null || item.meatCount !== null) {
+                    typeString = `<br>🐖 ពូជ: ${item.breedCount || 0} ក្បាល | 🍖 សាច់: ${item.meatCount || 0} ក្បាល`;
+                }
+
                 return `
                     <div class="history-item">
                         <div class="history-item-header">
@@ -725,7 +790,7 @@
                             <span>${item.total} ក្បាល</span>
                         </div>
                         <div class="history-details">
-                            📅 ${item.date} | 👤 ${item.inspector}<br>
+                            📅 ${item.date} | 👤 ${item.inspector}${typeString}<br>
                             ⚠️ ${specString}
                         </div>
                     </div>
@@ -750,8 +815,15 @@
             let tbody = document.getElementById('r-tbody');
             tbody.innerHTML = '';
 
-            let specialSum = 0;
+            let breedVal = document.getElementById('breedPigCount').value;
+            let meatVal = document.getElementById('meatPigCount').value;
 
+            if (breedVal !== '' || meatVal !== '') {
+                tbody.innerHTML += `<tr style="background:#f1f5f9;"><td>🐷 ជ្រូកពូជ</td><td style="text-align:right;">${parseInt(breedVal) || 0}</td></tr>`;
+                tbody.innerHTML += `<tr style="background:#f1f5f9;"><td>🍖 ជ្រូកសាច់</td><td style="text-align:right;">${parseInt(meatVal) || 0}</td></tr>`;
+            }
+
+            let specialSum = 0;
             for (let key in data.conditions) {
                 if (data.conditions[key] > 0) {
                     tbody.innerHTML += `<tr><td>${condNames[key]}</td><td style="text-align:right;">${data.conditions[key]}</td></tr>`;
