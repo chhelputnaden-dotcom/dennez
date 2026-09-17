@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>កម្មវិធីរាប់ជ្រូកលើទូរស័ព្ទដៃ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: #12161a;
+            color: #f1f5f9;
+            padding-bottom: 90px;
+        }
+
+        /* Top Header */
+        .app-header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 16px;
+            text-align: center;
+            border-bottom: 2px solid #334155;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .app-header h1 {
+            font-size: 20px;
+            color: #ffbe33;
+            font-weight: 700;
+        }
+
+        .app-header p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .container {
+            padding: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Card Component */
+        .card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 14px;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ffbe33;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Inputs */
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field label {
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .field input {
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: #ffbe33;
+        }
+
+        /* Main Counter Display */
+        .counter-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .stat-box {
+            background: #0f172a;
+            padding: 14px 10px;
+            border-radius: 14px;
+            border: 1px solid #334155;
+        }
+
+        .stat-box.primary {
+            border-color: #ffbe33;
+            background: rgba(255, 190, 51, 0.05);
+        }
+
+        .stat-box .num {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffbe33;
+            line-height: 1.1;
+        }
+
+        .stat-box.normal .num {
+            color: #22c55e;
+        }
+
+        .stat-box .lbl {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        /* Main Action Buttons */
+        .main-btn-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-giant {
+            background: linear-gradient(135deg, #ffbe33, #e69d00);
+            color: #0f172a;
+            font-size: 22px;
+            font-weight: 700;
+            border: none;
+            padding: 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 190, 51, 0.3);
+            active:scale(0.98);
+        }
+
+        .btn-giant:active {
+            transform: scale(0.96);
+            opacity: 0.9;
+        }
+
+        .sub-btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-sub {
+            background: #334155;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-sub:active {
+            transform: scale(0.95);
+            background: #475569;
+        }
+
+        .btn-minus {
+            background: #ef4444 !important;
+            color: #fff !important;
+        }
+
+        /* Special Conditions Grid */
+        .conditions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .cond-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .cond-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cond-name {
+            font-size: 13px;
+            color: #e2e8f0;
+            font-weight: 600;
+        }
+
+        .cond-count {
+            background: #ffbe33;
+            color: #0f172a;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .cond-actions {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 6px;
+        }
+
+        .btn-add-cond {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-sub-cond {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-add-cond:active, .btn-sub-cond:active {
+            transform: scale(0.93);
+        }
+
+        /* Bottom Fixed Action Bar */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1e293b;
+            padding: 12px;
+            border-top: 1px solid #334155;
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 99;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-print {
+            background: #22c55e;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #64748b;
+            color: white;
+            flex: 0.4;
+        }
+
+        /* Modal Sheet */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .report-paper {
+            background: #ffffff;
+            color: #000;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 450px;
+            margin: 20px auto;
+            font-size: 13px;
+        }
+
+        .report-paper h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+
+        .report-paper p.subtitle {
+            text-align: center;
+            font-size: 11px;
+            color: #64748b;
+            margin-bottom: 16px;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+        }
+
+        .report-table th, .report-table td {
+            border: 1px solid #cbd5e1;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .report-table th {
+            background: #f1f5f9;
+        }
+
+        .sign-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .sign-box {
+            height: 60px;
+        }
+
+        .no-print-btns {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .report-paper, .report-paper * {
+                visibility: visible;
+            }
+            .report-paper {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print-btns {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="app-header">
+        <h1>🐖 កម្មវិធីរាប់ជ្រូកកសិដ្ឋាន</h1>
+        <p id="current-time">ថ្ងៃព្រហស្បតិ៍ ទី១៧ កញ្ញា ២០២៦</p>
+    </div>
+
+    <div class="container">
+
+        <!-- Truck & Driver Info -->
+        <div class="card">
+            <div class="card-title">🚛 ព័ត៌មានរថយន្ត & អ្នកបើកបរ</div>
+            <div class="input-group">
+                <div class="field">
+                    <label>លេខផ្លាកលេខឡាន</label>
+                    <input type="text" id="truckNo" placeholder="ឧទាហរណ៍: 3A-8888">
+                </div>
+                <div class="field">
+                    <label>លេខទូរស័ព្ទអ្នកបើក</label>
+                    <input type="tel" id="driverPhone" placeholder="ឧទាហរណ៍: 012 345 678">
+                </div>
+            </div>
+            <div class="field" style="margin-top: 8px;">
+                <label>ឈ្មោះអ្នករាប់ / កសិដ្ឋាន</label>
+                <input type="text" id="inspectorName" placeholder="បញ្ចូលឈ្មោះអ្នកកត់ត្រា">
+            </div>
+        </div>
+
+        <!-- Counter Dashboard -->
+        <div class="counter-dashboard">
+            <div class="stat-box primary">
+                <div class="num" id="totalPig">0</div>
+                <div class="lbl">ជ្រូកសរុប (ក្បាល)</div>
+            </div>
+            <div class="stat-box normal">
+                <div class="num" id="normalPig">0</div>
+                <div class="lbl">ជ្រូកធម្មតា (ក្បាល)</div>
+            </div>
+        </div>
+
+        <!-- Main Buttons -->
+        <div class="card">
+            <div class="card-title">🔢 ចុចរាប់ចំនួនជ្រូក</div>
+            <div class="main-btn-grid">
+                <button class="btn-giant" onclick="changeTotal(5)">+៥ ក្បាល</button>
+                <button class="btn-sub" onclick="changeTotal(1)">+១</button>
+            </div>
+            <div class="sub-btn-grid">
+                <button class="btn-sub" onclick="changeTotal(-1)">-១</button>
+                <button class="btn-sub btn-minus" onclick="changeTotal(-5)">-៥ ក្បាល</button>
+            </div>
+        </div>
+
+        <!-- Special Conditions Section -->
+        <div class="card">
+            <div class="card-title">⚠️ កត់ត្រាជ្រូកមានលក្ខខណ្ឌពិសេស (+1)</div>
+            <div class="conditions-grid">
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">🦶 បាក់ជើង</span>
+                        <span class="cond-count" id="c-bakjeung">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('bakjeung', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('bakjeung', -1)">-1</button>
+                    </div>
+                </div>
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">👣 បោះជើង</span>
+                        <span class="cond-count" id="c-bohjeung">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('bohjeung', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('bohjeung', -1)">-1</button>
+                    </div>
+                </div>
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">🩹 ឈឺជើង / ខ្វិន</span>
+                        <span class="cond-count" id="c-chujeung">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('chujeung', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('chujeung', -1)">-1</button>
+                    </div>
+                </div>
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">✂️ ជ្រូកកាត់/គ្រៀវ</span>
+                        <span class="cond-count" id="c-kat">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('kat', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('kat', -1)">-1</button>
+                    </div>
+                </div>
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">😤 ជ្រូកដង្ហក់</span>
+                        <span class="cond-count" id="c-donghok">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('donghok', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('donghok', -1)">-1</button>
+                    </div>
+                </div>
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">🟡 ផ្លោកតូច</span>
+                        <span class="cond-count" id="c-plaokToch">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('plaokToch', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('plaokToch', -1)">-1</button>
+                    </div>
+                </div>
+
+                <div class="cond-card">
+                    <div class="cond-info">
+                        <span class="cond-name">🟠 ផ្លោកធំ</span>
+                        <span class="cond-count" id="c-plaokThom">0</span>
+                    </div>
+                    <div class="cond-actions">
+                        <button class="btn-add-cond" onclick="changeCond('plaokThom', 1)">+1</button>
+                        <button class="btn-sub-cond" onclick="changeCond('plaokThom', -1)">-1</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Fixed Bottom Bar -->
+    <div class="bottom-bar">
+        <button class="btn-action btn-reset" onclick="resetAll()">🔄 កែថ្មី</button>
+        <button class="btn-action btn-print" onclick="openReport()">📄 បង្ហាញរបាយការណ៍</button>
+    </div>
+
+    <!-- Report Sheet Modal -->
+    <div class="modal" id="reportModal">
+        <div class="report-paper">
+            <h2>លិខិតបញ្ជាក់ការរាប់ចំនួនជ្រូក</h2>
+            <p class="subtitle" id="r-date"></p>
+
+            <div style="margin-bottom: 10px; line-height: 1.6;">
+                <div><strong>ផ្លាកលេខឡាន:</strong> <span id="r-truck">-</span></div>
+                <div><strong>ទូរស័ព្ទអ្នកបើក:</strong> <span id="r-phone">-</span></div>
+                <div><strong>អ្នកកត់ត្រា:</strong> <span id="r-inspector">-</span></div>
+            </div>
+
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>លក្ខខណ្ឌ / ប្រភេទ</th>
+                        <th style="text-align: right;">ចំនួន (ក្បាល)</th>
+                    </tr>
+                </thead>
+                <tbody id="r-tbody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+
+            <div class="sign-grid">
+                <div>
+                    <p><strong>អ្នករាប់/កត់ត្រា</strong></p>
+                    <div class="sign-box"></div>
+                    <p>(ហត្ថលេខា)</p>
+                </div>
+                <div>
+                    <p><strong>អ្នកបើកបរ/ទទួល</strong></p>
+                    <div class="sign-box"></div>
+                    <p>(ហត្ថលេខា)</p>
+                </div>
+            </div>
+
+            <div class="no-print-btns">
+                <button class="btn-action btn-print" style="width:100%" onclick="window.print()">🖨️ បោះពុម្ព / Save PDF</button>
+                <button class="btn-action btn-reset" style="width:100%" onclick="closeReport()">បិទ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let data = {
+            total: 0,
+            conditions: {
+                bakjeung: 0,
+                bohjeung: 0,
+                chujeung: 0,
+                kat: 0,
+                donghok: 0,
+                plaokToch: 0,
+                plaokThom: 0
+            }
+        };
+
+        const condNames = {
+            bakjeung: 'ជ្រូកបាក់ជើង',
+            bohjeung: 'ជ្រូកបោះជើង',
+            chujeung: 'ជ្រូកឈឺជើង/ខ្វិន',
+            kat: 'ជ្រូកកាត់/គ្រៀវ',
+            donghok: 'ជ្រូកដង្ហក់',
+            plaokToch: 'ជ្រូកផ្លោកតូច',
+            plaokThom: 'ជ្រូកផ្លោកធំ'
+        };
+
+        function updateUI() {
+            document.getElementById('totalPig').innerText = data.total;
+            
+            let specialSum = 0;
+            for (let key in data.conditions) {
+                document.getElementById('c-' + key).innerText = data.conditions[key];
+                specialSum += data.conditions[key];
+            }
+
+            let normal = data.total - specialSum;
+            document.getElementById('normalPig').innerText = normal < 0 ? 0 : normal;
+        }
+
+        function changeTotal(val) {
+            data.total += val;
+            if (data.total < 0) data.total = 0;
+            updateUI();
+        }
+
+        function changeCond(key, val) {
+            data.conditions[key] += val;
+            if (data.conditions[key] < 0) data.conditions[key] = 0;
+            
+            // Auto increase total if adding special condition exceeds current total
+            let specialSum = Object.values(data.conditions).reduce((a, b) => a + b, 0);
+            if (specialSum > data.total) {
+                data.total = specialSum;
+            }
+
+            updateUI();
+        }
+
+        function resetAll() {
+            if (confirm("តើអ្នកពិតជាចង់កំណត់ទិន្នន័យឡើងវិញមែនទេ?")) {
+                data.total = 0;
+                for (let key in data.conditions) {
+                    data.conditions[key] = 0;
+                }
+                updateUI();
+            }
+        }
+
+        function openReport() {
+            const now = new Date();
+            document.getElementById('r-date').innerText = "កាលបរិច្ឆេទ: " + now.toLocaleString('km-KH');
+            document.getElementById('r-truck').innerText = document.getElementById('truckNo').value || 'មិនមាន';
+            document.getElementById('r-phone').innerText = document.getElementById('driverPhone').value || 'មិនមាន';
+            document.getElementById('r-inspector').innerText = document.getElementById('inspectorName').value || 'មិនមាន';
+
+            let tbody = document.getElementById('r-tbody');
+            tbody.innerHTML = '';
+
+            let specialSum = 0;
+
+            for (let key in data.conditions) {
+                if (data.conditions[key] > 0) {
+                    tbody.innerHTML += `<tr><td>${condNames[key]}</td><td style="text-align:right;">${data.conditions[key]}</td></tr>`;
+                    specialSum += data.conditions[key];
+                }
+            }
+
+            let normal = data.total - specialSum;
+            if (normal < 0) normal = 0;
+
+            tbody.innerHTML += `<tr style="background:#f8fafc;"><td><strong>ជ្រូកធម្មតា</strong></td><td style="text-align:right;"><strong>${normal}</strong></td></tr>`;
+            tbody.innerHTML += `<tr style="background:#e2e8f0; font-weight:bold;"><td>ជ្រូកសរុបទាំងអស់</td><td style="text-align:right;">${data.total} ក្បាល</td></tr>`;
+
+            document.getElementById('reportModal').style.display = 'block';
+        }
+
+        function closeReport() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
+        // Display Realtime Clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleString('km-KH', {
+                dateStyle: 'full',
+                timeStyle: 'short'
+            });
+        }
+        updateClock();
+        setInterval(updateClock, 60000);
+    </script>
+</body>
+</html>
