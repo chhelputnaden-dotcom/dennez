@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>កម្មវិធីរាប់ជ្រូកលើទូរស័ព្ទដៃ</title>
+    <title>កម្មវិធីរាប់ជ្រូកកសិដ្ឋាន</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap');
 
@@ -11,7 +11,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Kantumruy Pro', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
@@ -22,7 +22,6 @@
             padding-bottom: 90px;
         }
 
-        /* Top Header */
         .app-header {
             background: linear-gradient(135deg, #1e293b, #0f172a);
             padding: 16px;
@@ -52,7 +51,6 @@
             margin: 0 auto;
         }
 
-        /* Card Component */
         .card {
             background: #1e293b;
             border-radius: 16px;
@@ -72,7 +70,6 @@
             gap: 8px;
         }
 
-        /* Inputs */
         .input-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -83,28 +80,30 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
+            min-width: 0;
         }
 
         .field label {
-            font-size: 12px;
+            font-size: 11px;
             color: #cbd5e1;
+            white-space: nowrap;
         }
 
         .field input {
             background: #0f172a;
             border: 1px solid #475569;
             color: #fff;
-            padding: 10px;
+            padding: 10px 8px;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
+            width: 100%;
         }
 
         .field input:focus {
             border-color: #ffbe33;
         }
 
-        /* Main Counter Display */
         .counter-dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -142,7 +141,6 @@
             margin-top: 4px;
         }
 
-        /* Main Action Buttons */
         .main-btn-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -160,12 +158,10 @@
             border-radius: 14px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(255, 190, 51, 0.3);
-            active:scale(0.98);
         }
 
         .btn-giant:active {
             transform: scale(0.96);
-            opacity: 0.9;
         }
 
         .sub-btn-grid {
@@ -195,7 +191,6 @@
             color: #fff !important;
         }
 
-        /* Special Conditions Grid */
         .conditions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -262,21 +257,16 @@
             cursor: pointer;
         }
 
-        .btn-add-cond:active, .btn-sub-cond:active {
-            transform: scale(0.93);
-        }
-
-        /* Bottom Fixed Action Bar */
         .bottom-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background: #1e293b;
-            padding: 12px;
+            padding: 10px;
             border-top: 1px solid #334155;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             max-width: 500px;
             margin: 0 auto;
             z-index: 99;
@@ -284,16 +274,21 @@
 
         .btn-action {
             flex: 1;
-            padding: 12px;
+            padding: 12px 6px;
             border-radius: 10px;
             border: none;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
+        }
+
+        .btn-save {
+            background: #3b82f6;
+            color: white;
         }
 
         .btn-print {
@@ -304,10 +299,31 @@
         .btn-reset {
             background: #64748b;
             color: white;
-            flex: 0.4;
         }
 
-        /* Modal Sheet */
+        .history-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            color: #ffbe33;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .history-details {
+            color: #94a3b8;
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -367,7 +383,7 @@
         }
 
         .sign-box {
-            height: 60px;
+            height: 50px;
         }
 
         .no-print-btns {
@@ -397,10 +413,9 @@
 </head>
 <body>
 
-    <!-- Header -->
     <div class="app-header">
         <h1>🐖 កម្មវិធីរាប់ជ្រូកកសិដ្ឋាន</h1>
-        <p id="current-time">ថ្ងៃព្រហស្បតិ៍ ទី១៧ កញ្ញា ២០២៦</p>
+        <p id="current-time">--/--/---- --:--</p>
     </div>
 
     <div class="container">
@@ -411,16 +426,16 @@
             <div class="input-group">
                 <div class="field">
                     <label>លេខផ្លាកលេខឡាន</label>
-                    <input type="text" id="truckNo" placeholder="ឧទាហរណ៍: 3A-8888">
+                    <input type="text" id="truckNo" placeholder="3A-8888">
                 </div>
                 <div class="field">
                     <label>លេខទូរស័ព្ទអ្នកបើក</label>
-                    <input type="tel" id="driverPhone" placeholder="ឧទាហរណ៍: 012 345 678">
+                    <input type="tel" id="driverPhone" placeholder="012 345 678">
                 </div>
             </div>
             <div class="field" style="margin-top: 8px;">
                 <label>ឈ្មោះអ្នករាប់ / កសិដ្ឋាន</label>
-                <input type="text" id="inspectorName" placeholder="បញ្ចូលឈ្មោះអ្នកកត់ត្រា">
+                <input type="text" id="inspectorName" placeholder="ឈ្មោះអ្នកកត់ត្រា">
             </div>
         </div>
 
@@ -478,7 +493,7 @@
 
                 <div class="cond-card">
                     <div class="cond-info">
-                        <span class="cond-name">🩹 ឈឺជើង / ខ្វិន</span>
+                        <span class="cond-name">🩹 ឈឺជើង/ខ្វិន</span>
                         <span class="cond-count" id="c-chujeung">0</span>
                     </div>
                     <div class="cond-actions">
@@ -534,12 +549,24 @@
             </div>
         </div>
 
+        <!-- History Log Section -->
+        <div class="card">
+            <div class="card-title" style="justify-content: space-between;">
+                <span>📜 ប្រវត្តិរាប់ចាស់ៗ (History)</span>
+                <button onclick="clearHistory()" style="background:#ef4444; color:white; border:none; padding:2px 8px; border-radius:6px; font-size:11px; cursor:pointer;">លុបទាំងអស់</button>
+            </div>
+            <div id="history-list">
+                <p style="color:#64748b; font-size:12px; text-align:center;">មិនទាន់មានប្រវត្តិរក្សាទុកនៅឡើយ</p>
+            </div>
+        </div>
+
     </div>
 
     <!-- Fixed Bottom Bar -->
     <div class="bottom-bar">
         <button class="btn-action btn-reset" onclick="resetAll()">🔄 កែថ្មី</button>
-        <button class="btn-action btn-print" onclick="openReport()">📄 បង្ហាញរបាយការណ៍</button>
+        <button class="btn-action btn-save" onclick="saveRecord()">💾 រក្សាទុក</button>
+        <button class="btn-action btn-print" onclick="openReport()">📄 របាយការណ៍</button>
     </div>
 
     <!-- Report Sheet Modal -->
@@ -561,9 +588,7 @@
                         <th style="text-align: right;">ចំនួន (ក្បាល)</th>
                     </tr>
                 </thead>
-                <tbody id="r-tbody">
-                    <!-- Dynamic Rows -->
-                </tbody>
+                <tbody id="r-tbody"></tbody>
             </table>
 
             <div class="sign-grid">
@@ -580,7 +605,7 @@
             </div>
 
             <div class="no-print-btns">
-                <button class="btn-action btn-print" style="width:100%" onclick="window.print()">🖨️ បោះពុម្ព / Save PDF</button>
+                <button class="btn-action btn-print" style="width:100%" onclick="window.print()">🖨️ បោះពុម្ព / PDF</button>
                 <button class="btn-action btn-reset" style="width:100%" onclick="closeReport()">បិទ</button>
             </div>
         </div>
@@ -633,7 +658,6 @@
             data.conditions[key] += val;
             if (data.conditions[key] < 0) data.conditions[key] = 0;
             
-            // Auto increase total if adding special condition exceeds current total
             let specialSum = Object.values(data.conditions).reduce((a, b) => a + b, 0);
             if (specialSum > data.total) {
                 data.total = specialSum;
@@ -649,6 +673,70 @@
                     data.conditions[key] = 0;
                 }
                 updateUI();
+            }
+        }
+
+        function saveRecord() {
+            if (data.total === 0) {
+                alert("សូមរាប់ចំនួនជ្រូកជាមុនសិន înainte save!");
+                return;
+            }
+
+            const record = {
+                id: Date.now(),
+                date: new Date().toLocaleString('km-KH'),
+                truck: document.getElementById('truckNo').value || 'មិនមាន',
+                phone: document.getElementById('driverPhone').value || 'មិនមាន',
+                inspector: document.getElementById('inspectorName').value || 'មិនមាន',
+                total: data.total,
+                conditions: {...data.conditions}
+            };
+
+            let history = JSON.parse(localStorage.getItem('pigHistory') || '[]');
+            history.unshift(record);
+            localStorage.setItem('pigHistory', JSON.stringify(history));
+
+            alert("កត់ត្រាចូល History រួចរាល់!");
+            renderHistory();
+        }
+
+        function renderHistory() {
+            let history = JSON.parse(localStorage.getItem('pigHistory') || '[]');
+            let list = document.getElementById('history-list');
+            
+            if (history.length === 0) {
+                list.innerHTML = '<p style="color:#64748b; font-size:12px; text-align:center;">មិនទាន់មានប្រវត្តិរក្សាទុកនៅឡើយ</p>';
+                return;
+            }
+
+            list.innerHTML = history.map(item => {
+                let specTxt = [];
+                for (let k in item.conditions) {
+                    if (item.conditions[k] > 0) {
+                        specTxt.push(`${condNames[k]}: ${item.conditions[k]}`);
+                    }
+                }
+                let specString = specTxt.length > 0 ? specTxt.join(', ') : 'គ្មានលក្ខខណ្ឌពិសេស';
+
+                return `
+                    <div class="history-item">
+                        <div class="history-item-header">
+                            <span>🚛 ឡាន: ${item.truck} (${item.phone})</span>
+                            <span>${item.total} ក្បាល</span>
+                        </div>
+                        <div class="history-details">
+                            📅 ${item.date} | 👤 ${item.inspector}<br>
+                            ⚠️ ${specString}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            if (confirm("តើអ្នកចង់លុបប្រវត្តិរាប់ចាស់ៗទាំងអស់មែនទេ?")) {
+                localStorage.removeItem('pigHistory');
+                renderHistory();
             }
         }
 
@@ -684,7 +772,6 @@
             document.getElementById('reportModal').style.display = 'none';
         }
 
-        // Display Realtime Clock
         function updateClock() {
             const now = new Date();
             document.getElementById('current-time').innerText = now.toLocaleString('km-KH', {
@@ -692,8 +779,10 @@
                 timeStyle: 'short'
             });
         }
+        
         updateClock();
         setInterval(updateClock, 60000);
+        renderHistory();
     </script>
 </body>
 </html>
